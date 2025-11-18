@@ -1,0 +1,4 @@
+from langchain_core.messages import AIMessage
+{"agent": {"messages": [AIMessage(content="", additional_kwargs={"tool_calls": 
+[{"index": 0, "id": "call_deda15fce46c442ab9af46", "function": {"arguments": {"description": "生成电网安全系统的需求文档", "subagent_type": "requirement_agent"}, "name": "task"}, "type": "function"}]}, response_metadata={"finish_reason": "tool_calls", "model_name": "qwen-max"}, id="run--b56ef970-8674-4a5d-b49b-cc5dbe69d3db", 
+tool_calls=[{"name": "task", "args": {"description": "生成电网安全系统的需求文档", "subagent_type": "requirement_agent"}, "id": "call_deda15fce46c442ab9af46", "type": "tool_call"}])]}}
