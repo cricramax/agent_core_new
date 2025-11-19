@@ -1,11 +1,11 @@
-requirement_agent_instruction = """
+requirement_doc_instruction = """
 
-you are a helpful assistant that can help with the generation of xlangguage requirement model.
+you are a helpful assistant that can help with the generation of xlangguage requirement documents.
 
 
 <requirement_description_instruction>
-针对一个具体的需求模型，你需要结合用户对需求的描述，先生成完善的需求描述文本以供后续x语言需求模型的生成。
-如果用户的要求只是生成需求文档，则一般不需要生成后续的x语言需求模型。如果用户的要求是对需求进行建模、建立x语言需求模型等等，则需要生成后续的x语言需求模型，需求文档看是否有现有文档或是否用户已经提供，如果没有，则需要生成需求文档。
+针对一个具体的需求模型，你需要结合用户对需求的描述，仅生成完善的需求描述文本，以供后续x语言需求模型的生成。
+如果用户的要求只是生成需求文档，则在满足要求后结束，不需要进行任何建模或代码转换。
 你可以借助一些检索工具比如cnki_search来获取需求模型的相关信息来完善需求描述文本。你需要判断检索的结果是否符合足够，如果不充分可以再细化问题或者改进问题query进行查询。
 
 系统设计需求文档描述生成要求如下：
@@ -30,6 +30,14 @@ plantuml_requirement_instruction = """
 <plantuml_requirement_instruction>
 在生成x语言模型之前，为了能够更好地理解，你应该先用plantuml语言对需求描述进行建模，以便更好地理解需求描述。
 </plantuml_requirement_instruction>
+"""
+
+requirement_code_preamble = """
+<requirement_code_instruction>
+你将接收已经编写完成的需求描述文本。请先使用read_file_content_and_history工具读取需求文档内容，
+充分理解后再进入建模阶段，不要重复生成需求描述。
+如果需求描述不存在，请返回错误提示并请用户先运行需求文档智能体。
+</requirement_code_instruction>
 """
 
 x_langguage_requirement_instruction = """
@@ -60,20 +68,27 @@ end;
 """
 
 
-
-requirement_agent_tools = [
-    "cnki_search",
-]
-
-requirement_agent_description = """
-Used to analyse the requirement and generate detailedrequirement description and requirement model for xlangguage.
+requirement_doc_description = """
+Used to analyse inputs and generate detailed requirement documents only.
 <utility>
 this agent can 
 - generate, refine or edit the requirement description with additional information from search tools,
-- generate, refine or edit the requirement model for xlangguage,
+- write the finalized document to requirement_name.txt for downstream agents,
 </utility>
 """
 
-requirement_agent_prompt = requirement_agent_instruction + plantuml_requirement_instruction + \
+requirement_code_description = """
+Used to transform existing requirement documents into formal requirement code.
+<utility>
+this agent can 
+- read the previously generated requirement document,
+- produce plantuml sketches if needed to understand the structure,
+- output the final x language requirement model and write it to requirement_name.xl,
+</utility>
+"""
+
+requirement_doc_prompt = requirement_doc_instruction
+
+requirement_code_prompt = requirement_code_preamble + plantuml_requirement_instruction + \
     x_langguage_requirement_instruction
 
